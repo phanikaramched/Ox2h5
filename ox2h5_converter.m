@@ -184,12 +184,12 @@ if exist('Bruker_coordinate_system.tiff')~=2
      error('Could not locate the Bruker coordinate file .tiff. Please add it to this directory');
 end
 
-image=imread('Bruker_coordinate_system.tiff');
+%image=imread('Bruker_coordinate_system.tiff');
 %h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates'],[size(image,1),size(image,2)]);
-h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates/'],image);
+%h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates/'],image);
 
-h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],1);
-h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],5);
+%h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],1);
+%h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],5);
 
 
 
