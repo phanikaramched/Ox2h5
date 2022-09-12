@@ -1,16 +1,13 @@
 % %function [ MapData,MicroscopeData,PhaseData,EBSPData ] = CTF_HDF5( InputUser )
 % 
+clc;clear
 
 %% Inputs required
-directory='T:\Phani\KK\si-test\';   %Remember '\' at the end
-filename='silicontest1';
+directory= 'Y:\Xinrui\Crossbeam\Xinrui\016\Unprocessed 1\';   %Remember '\' at the end
+filename='Map Data 1';
 extension_for_images_directory='_Images';   %Any extenstion names to images directory
-%extension_for_images_directory='_Images';   %Any extenstion names to images directory
 image_file_type='.tiff';
 %% 
-
-
-
 
 InputUser.CTF_dir=directory;
 InputUser.CTF_File=strcat(directory,filename,'.ctf');
@@ -20,7 +17,7 @@ addpath(genpath(InputUser.CTF_dir));
 %InputUser.CTF_File='test1.ctf';
 tic 
 OutputUser.name = filename;
-OutputUser.HDF5_File=[InputUser.CTF_dir '\' OutputUser.name '.h5'];
+OutputUser.HDF5_File=[InputUser.CTF_dir OutputUser.name '.h5'];
 
  
  if exist(InputUser.CTF_File)~=2 
@@ -30,6 +27,9 @@ OutputUser.HDF5_File=[InputUser.CTF_dir '\' OutputUser.name '.h5'];
      end
  end
  
+ if exist(OutputUser.HDF5_File,'file')
+    delete(OutputUser.HDF5_File)
+end
  
 
 %Read CTF and save data to workspace
@@ -185,11 +185,11 @@ if exist('Bruker_coordinate_system.tiff')~=2
 end
 
 image=imread('Bruker_coordinate_system.tiff');
-h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates/'],[size(image,1),size(image,2)]);
-h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates/'],image);
+%h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates/'],[size(image,1),size(image,2)]);
+%h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates/'],image);
 
-h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],1);
-h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],5);
+%h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],1);
+%h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],5);
 
 
 
@@ -254,8 +254,13 @@ h5write(OutputUser.HDF5_File,[headerpath,'NPoints'],ndatatot);
 h5create(OutputUser.HDF5_File,[headerpath,'NROWS'],1,'Datatype','int32');
 h5write(OutputUser.HDF5_File,[headerpath,'NROWS'],nodatay);
 
-sort(InputUser.imagesdirectory,'ascend');
-FileNames=dir([InputUser.imagesdirectory '/*' image_file_type]);
+
+%%%Uses Natural sorting instead of string sort
+%InputUser.imagesdirectory=sort(InputUser.imagesdirectory,'ascend');
+%FileNames=dir([InputUser.imagesdirectory '/*' image_file_type]);
+FileNames = dir(fullfile(InputUser.imagesdirectory,strcat('*',image_file_type)));
+FileNames = natsortfiles(FileNames);
+
 
 string = imfinfo(FileNames(1).name);            
 PatternHeight = string.Height;
@@ -341,10 +346,10 @@ h5create(OutputUser.HDF5_File,[headerpath,'phi2'],[ndatatot 1] );
 h5write(OutputUser.HDF5_File,[headerpath,'phi2'],numdata(:,8));
 
 h5create(OutputUser.HDF5_File,[headerpath,'X BEAM'],[ndatatot 1] );
-h5write(OutputUser.HDF5_File,[headerpath,'X BEAM'],numdata(:,2)/stepx);
+h5write(OutputUser.HDF5_File,[headerpath,'X BEAM'],round(numdata(:,2)/stepx));
 
 h5create(OutputUser.HDF5_File,[headerpath,'Y BEAM'],[ndatatot 1] );
-h5write(OutputUser.HDF5_File,[headerpath,'Y BEAM'],numdata(:,3)/stepy);
+h5write(OutputUser.HDF5_File,[headerpath,'Y BEAM'],round(numdata(:,3)/stepy));
 
 h5create(OutputUser.HDF5_File,[headerpath,'X SAMPLE'],[ndatatot 1] );
 h5write(OutputUser.HDF5_File,[headerpath,'X SAMPLE'],flip(numdata(:,2)+stepx));
@@ -419,3 +424,8 @@ h5write(OutputUser.HDF5_File,[headerpath,'PCY'],PCYpu);
 h5write(OutputUser.HDF5_File,[headerpath,'DD'],DDpu);
 close(h)
 disp('Done !')
+
+%%
+cd('A:\OneDrive - Nexus365\GitHub\xEBSDv3')
+fname = [directory  'EBGSD']; clearvars -except fname
+input_deck2
