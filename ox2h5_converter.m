@@ -185,11 +185,11 @@ if exist('Bruker_coordinate_system.tiff')~=2
 end
 
 image=imread('Bruker_coordinate_system.tiff');
-%h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates/'],[size(image,1),size(image,2)]);
-%h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates/'],image);
+%h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates'],[size(image,1),size(image,2)]);
+h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ESPRIT Coordinates/'],image);
 
-%h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],1);
-%h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],5);
+h5create(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],1);
+h5write(OutputUser.HDF5_File,['/' filename '/EBSD/Header/Coordinate Systems/ID/'],5);
 
 
 
@@ -425,7 +425,3 @@ h5write(OutputUser.HDF5_File,[headerpath,'DD'],DDpu);
 close(h)
 disp('Done !')
 
-%%
-cd('A:\OneDrive - Nexus365\GitHub\xEBSDv3')
-fname = [directory  'EBGSD']; clearvars -except fname
-input_deck2
