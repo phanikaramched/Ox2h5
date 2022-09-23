@@ -386,7 +386,7 @@ h=waitbar(0,'Adding raw EBSPs and PCs to file ...');
 for i=1:2:length(FileNames)-1
      RawPattern=cat(3,imread(FileNames(i).name)',imread(FileNames(i+1).name)');
      h5write(OutputUser.HDF5_File,[headerpath,'RawPatterns'],RawPattern,[1 1 i],[PW PH 2]);
-     string1 = imfinfo(FileNames(1).name);
+     string1 = imfinfo(FileNames(i).name);
      string1 = string1.UnknownTags.Value;
      PCX1=str2double(string1((strfind(string1,'<pattern-center-x-pu>')+21):(strfind(string1,'</pattern-center-x-pu>')-1)));
      PCXpu=[PCXpu;(PCX1*PW)/PW];
